@@ -1,0 +1,21 @@
+# Original Plesk/Sitejet export archive (1.15 GB) - keep it outside the repository
+ponteunamilnoh_backup.zip
+*.zip
+*.tar.gz
+
+# OS / editor noise
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+*.swp
+.vscode/
+.idea/
+
+# Local tooling
+node_modules/
+.env
+.env.local
+
+# Local screenshots used for visual regression checks
+/.baseline-shots/
