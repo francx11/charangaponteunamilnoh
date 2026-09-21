@@ -91,17 +91,38 @@ function initSlider(container) {
   const built = build(container, params);
   if (!built) return;
 
-  const { track, slides } = built;
+  const { list, track, slides } = built;
   const count = slides.length;
   let index = 0;
   let timer = null;
 
+  // Translate by measured pixels, never by a percentage: the preset caps each
+  // slide at calc(100% - 80px) to leave room for the arrows, so a percentage of
+  // the track box would drift by 80px on every step. The leftover is split on
+  // both sides, which is what centerMode did in the original slider.
+  const offsetFor = (i) => {
+    const slideWidth = slides[0].getBoundingClientRect().width;
+    const gutter = Math.max(0, (list.getBoundingClientRect().width - slideWidth) / 2);
+    return gutter - i * slideWidth;
+  };
+
   const render = () => {
-    track.style.transform = `translate3d(-${index * 100}%, 0, 0)`;
+    track.style.transform = `translate3d(${offsetFor(index)}px, 0, 0)`;
     slides.forEach((s, i) => s.classList.toggle('slick-current', i === index));
     slides.forEach((s, i) => s.classList.toggle('slick-active', i === index));
     if (dots) [...dots.children].forEach((li, i) => li.classList.toggle('slick-active', i === index));
   };
+
+  // Keep the offset correct when the viewport changes, without animating it.
+  const reflow = () => {
+    const transition = track.style.transition;
+    track.style.transition = 'none';
+    render();
+    void track.offsetWidth;
+    track.style.transition = transition;
+  };
+  window.addEventListener('resize', reflow);
+  if ('ResizeObserver' in window) new ResizeObserver(reflow).observe(container);
 
   const goTo = (target) => {
     index = params.loop === false

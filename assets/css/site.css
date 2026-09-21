@@ -84,6 +84,15 @@
   margin: 0 0 4px;
 }
 
+/* On phones the two actions stack, so give them the same width instead of
+   leaving the short one floating in the middle. */
+@media screen and (max-width: 35.9375rem) {
+  .contact-cta .button {
+    flex: 1 1 100%;
+    text-align: center;
+  }
+}
+
 /* ---- Slider controls rebuilt without slick's JS ------------------------- */
 .slider-container { position: relative; overflow: hidden; }
 .slider-container .slick-list { overflow: hidden; }
