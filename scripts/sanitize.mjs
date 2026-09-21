@@ -101,6 +101,56 @@ function removeElementByMarker(html, marker, levels = 0) {
   return removeDivAt(html, open);
 }
 
+/** Modules imported by main.js, preloaded so they are fetched in parallel. */
+const MODULES = ['nav', 'lazyload', 'parallax', 'slider', 'lightbox', 'maps', 'slots', 'config'];
+
+/**
+ * Anything inside the banner is above the fold, so it must not wait for the
+ * module graph to boot before its request even starts. Give those elements
+ * their real source at parse time, so the browser's preload scanner picks them
+ * up, and preload the hero background.
+ *
+ * Returns the hero image url, if there is one, so the caller can preload it.
+ */
+function eagerLoadBanner(html) {
+  const bannerStart = html.search(/<div class="ed-element ed-container banner[^"]*"/);
+  if (bannerStart === -1) return { html, hero: null };
+
+  const bannerEnd = endOfDiv(html, bannerStart);
+  const banner = html.slice(bannerStart, bannerEnd);
+  let hero = null;
+
+  let out = banner;
+
+  // Background holders: write the real image into the inline style.
+  out = out.replace(
+    /<div([^>]*?)class="([^"]*?)ed-lazyload([^"]*?)"([^>]*?)data-background="url\(&quot;([^&]+)&quot;\)"([^>]*?)style="background-image: url\(&quot;[^"]*?&quot;\);"/g,
+    (full, a, c1, c2, b, url, d) => {
+      hero = hero || url;
+      const classes = `${c1}${c2}`.replace(/\s+/g, ' ').trim();
+      return `<div${a}class="${classes}"${b}data-background="url(&quot;${url}&quot;)"${d}style="background-image: url(&quot;${url}&quot;);"`;
+    }
+  );
+
+  // Images: promote data-src/data-srcset to src/srcset.
+  out = out.replace(/<img([^>]*?)class="([^"]*?)ed-lazyload([^"]*?)"([^>]*?)>/g, (full, a, c1, c2, b) => {
+    const src = /data-src="([^"]+)"/.exec(full);
+    if (!src) return full;
+    const srcset = /data-srcset="([^"]+)"/.exec(full);
+    const classes = `${c1}${c2}`.replace(/\s+/g, ' ').trim();
+
+    let tag = classes ? `<img${a}class="${classes}"${b}>` : `<img${a.replace(/\s+$/, ' ')}${b.replace(/^\s+/, '')}>`;
+    tag = tag.replace(/\s*src="[^"]*"/, ` src="${src[1]}"`);
+    tag = srcset
+      ? tag.replace(/\s*srcset="[^"]*"/, ` srcset="${srcset[1]}"`)
+      : tag.replace(/\s*srcset="[^"]*"/, '');
+    if (!/fetchpriority=/.test(tag)) tag = tag.replace('<img', '<img fetchpriority="high"');
+    return tag;
+  });
+
+  return { html: html.slice(0, bannerStart) + out + html.slice(bannerEnd), hero };
+}
+
 function sanitize(html, file) {
   const before = countAll(html);
   let out = html;
@@ -143,15 +193,26 @@ function sanitize(html, file) {
   // 9. The PHP-backed form is replaced by direct contact actions.
   out = out.replace(/<form method="POST"[\s\S]*?<\/form>/g, CONTACT_CTA);
 
-  // 10. Wire in the replacement stylesheet and modules.
+  // 10. Above-the-fold content must not depend on the module graph.
+  const eager = eagerLoadBanner(out);
+  out = eager.html;
+
+  // 11. Wire in the replacement stylesheet and modules.
   if (!out.includes('/assets/css/site.css')) {
     out = out.replace(/(<link rel="stylesheet"[^>]*id="customcss"\/>)/, `$1${STYLESHEET_TAG}`);
   }
   if (!out.includes('/assets/js/main.js')) {
     out = out.replace('</body>', `${SCRIPT_TAG}</body>`);
   }
+  if (!out.includes('rel="modulepreload"')) {
+    const preloads = MODULES.map((m) => `<link rel="modulepreload" href="/assets/js/${m}.js"/>`).join('');
+    out = out.replace(STYLESHEET_TAG, `${STYLESHEET_TAG}${preloads}`);
+  }
+  if (eager.hero && !out.includes('rel="preload" as="image"')) {
+    out = out.replace(STYLESHEET_TAG, `${STYLESHEET_TAG}<link rel="preload" as="image" fetchpriority="high" href="${eager.hero}"/>`);
+  }
 
-  // 11. Guard rails.
+  // 12. Guard rails.
   const after = countAll(out);
   for (const key of Object.keys(SEO_PATTERNS)) {
     if (key === 'edIds') continue;
