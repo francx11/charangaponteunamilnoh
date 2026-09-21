@@ -19,3 +19,6 @@ node_modules/
 
 # Local screenshots used for visual regression checks
 /.baseline-shots/
+
+# Playwright MCP session output
+/.playwright-mcp/
