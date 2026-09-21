@@ -1,0 +1,755 @@
+{
+  "generatedBy": "scripts/build-slots.mjs",
+  "slots": [
+    {
+      "id": "miniaturaactuaciones",
+      "label": "Portada de vídeo 1",
+      "section": "Actuaciones de escenario",
+      "kind": "poster",
+      "file": "MiniaturaActuaciones.png",
+      "fallback": "/images/0/7909365/MiniaturaActuaciones.png",
+      "pages": [
+        "/es/actuaciones-de-escenario",
+        "/gd/actuaciones-de-escenario"
+      ]
+    },
+    {
+      "id": "fotocanarias",
+      "label": "Fondo 1",
+      "section": "Biografía",
+      "kind": "background",
+      "file": "FotoCanarias.jpg",
+      "fallback": "/images/1066/7847876/FotoCanarias.jpg",
+      "pages": [
+        "/es/biografia",
+        "/gd/biografia"
+      ]
+    },
+    {
+      "id": "img-20190517-wa0027",
+      "label": "Fondo 2",
+      "section": "Biografía",
+      "kind": "background",
+      "file": "IMG-20190517-WA0027.jpg",
+      "fallback": "/images/1600/7847873/IMG-20190517-WA0027.jpg",
+      "pages": [
+        "/es/biografia",
+        "/gd/biografia"
+      ]
+    },
+    {
+      "id": "photo-2024-03-21-13-43-43",
+      "label": "Foto 1",
+      "section": "Contacto",
+      "kind": "image",
+      "file": "PHOTO-2024-03-21-13-43-43.jpg",
+      "fallback": "/images/1024/8072331/PHOTO-2024-03-21-13-43-43.jpg",
+      "pages": [
+        "/gd/contacto"
+      ]
+    },
+    {
+      "id": "whatsappimage2024-03-21at13-43-44",
+      "label": "Foto 2",
+      "section": "Contacto",
+      "kind": "image",
+      "file": "WhatsAppImage2024-03-21at13.43.44.jpeg",
+      "fallback": "/images/1024/8033625/WhatsAppImage2024-03-21at13.43.44.jpeg",
+      "pages": [
+        "/es/contacto"
+      ]
+    },
+    {
+      "id": "img-20190304-wa0007",
+      "label": "Foto 1",
+      "section": "Despedidas de Solter@",
+      "kind": "image",
+      "file": "IMG-20190304-WA0007.jpg",
+      "fallback": "/images/1024_1599x898_0_0/7847360/IMG-20190304-WA0007.jpg",
+      "pages": [
+        "/es/despedidas-de-solter",
+        "/gd/despedidas-de-solter"
+      ]
+    },
+    {
+      "id": "img-20190519-142647",
+      "label": "Foto 1",
+      "section": "Fiestas Patronales",
+      "kind": "image",
+      "file": "IMG_20190519_142647.jpg",
+      "fallback": "/images/800x800/7848201/IMG_20190519_142647.jpg",
+      "pages": [
+        "/es/fiestas-patronales",
+        "/gd/fiestas-patronales"
+      ]
+    },
+    {
+      "id": "img-20190906-193222",
+      "label": "Foto 2",
+      "section": "Fiestas Patronales",
+      "kind": "image",
+      "file": "IMG_20190906_193222.jpg",
+      "fallback": "/images/800x800/7848194/IMG_20190906_193222.jpg",
+      "pages": [
+        "/es/fiestas-patronales",
+        "/gd/fiestas-patronales"
+      ]
+    },
+    {
+      "id": "img-20190908-135631",
+      "label": "Foto 3",
+      "section": "Fiestas Patronales",
+      "kind": "image",
+      "file": "IMG_20190908_135631.jpg",
+      "fallback": "/images/800x800/7848195/IMG_20190908_135631.jpg",
+      "pages": [
+        "/es/fiestas-patronales",
+        "/gd/fiestas-patronales"
+      ]
+    },
+    {
+      "id": "img-20190609-wa0030",
+      "label": "Foto 4",
+      "section": "Fiestas Patronales",
+      "kind": "image",
+      "file": "IMG-20190609-WA0030.jpg",
+      "fallback": "/images/800x800/7848209/IMG-20190609-WA0030.jpg",
+      "pages": [
+        "/es/fiestas-patronales",
+        "/gd/fiestas-patronales"
+      ]
+    },
+    {
+      "id": "banner",
+      "label": "Foto 1",
+      "section": "Galería",
+      "kind": "image",
+      "file": "banner.jpg",
+      "fallback": "/images/1024_510x510_85_0/7705610/banner.jpg",
+      "pages": [
+        "/es/galeria",
+        "/gd/despedidas-de-solter",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "img-20180514-182534-004",
+      "label": "Foto 2",
+      "section": "Galería",
+      "kind": "image",
+      "file": "IMG_20180514_182534_004.jpg",
+      "fallback": "/images/1024_1066x1066_266_0/8072245/IMG_20180514_182534_004.jpg",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "img-20190526-000301",
+      "label": "Foto 3",
+      "section": "Galería",
+      "kind": "image",
+      "file": "IMG_20190526_000301.jpg",
+      "fallback": "/images/1024_3456x3456_576_0/8033529/IMG_20190526_000301.jpg",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "img-20190817-121506",
+      "label": "Foto 4",
+      "section": "Galería",
+      "kind": "image",
+      "file": "IMG_20190817_121506.jpg",
+      "fallback": "/images/1024_3000x3000_500_0/8072252/IMG_20190817_121506.jpg",
+      "pages": [
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "img-20190817-132202",
+      "label": "Foto 5",
+      "section": "Galería",
+      "kind": "image",
+      "file": "IMG_20190817_132202.jpg",
+      "fallback": "/images/1024_3000x3000_500_0/8033570/IMG_20190817_132202.jpg",
+      "pages": [
+        "/es/galeria"
+      ]
+    },
+    {
+      "id": "img-20190908-132618",
+      "label": "Foto 6",
+      "section": "Galería",
+      "kind": "image",
+      "file": "IMG_20190908_132618.jpg",
+      "fallback": "/images/1024_1200x1200_200_0/8033511/IMG_20190908_132618.jpg",
+      "pages": [
+        "/es/fiestas-patronales",
+        "/es/galeria",
+        "/gd/fiestas-patronales"
+      ]
+    },
+    {
+      "id": "img-20190310-wa0101",
+      "label": "Foto 7",
+      "section": "Galería",
+      "kind": "image",
+      "file": "IMG-20190310-WA0101.jpg",
+      "fallback": "/images/1024_1200x1200_200_0/8033532/IMG-20190310-WA0101.jpg",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "img-20190310-wa0103",
+      "label": "Foto 8",
+      "section": "Galería",
+      "kind": "image",
+      "file": "IMG-20190310-WA0103.jpg",
+      "fallback": "/images/1024_1200x1200_200_0/8033534/IMG-20190310-WA0103.jpg",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "img-20190311-wa0016",
+      "label": "Foto 9",
+      "section": "Galería",
+      "kind": "image",
+      "file": "IMG-20190311-WA0016.jpg",
+      "fallback": "/images/1024_1200x1200_0_200/8033510/IMG-20190311-WA0016.jpg",
+      "pages": [
+        "/es/galeria"
+      ]
+    },
+    {
+      "id": "img-20190725-wa0030",
+      "label": "Foto 10",
+      "section": "Galería",
+      "kind": "image",
+      "file": "IMG-20190725-WA0030.jpg",
+      "fallback": "/images/1024_1200x1200_200_0/8033516/IMG-20190725-WA0030.jpg",
+      "pages": [
+        "/es/galeria"
+      ]
+    },
+    {
+      "id": "img-20190728-wa0065",
+      "label": "Foto 11",
+      "section": "Galería",
+      "kind": "image",
+      "file": "IMG-20190728-WA0065.jpg",
+      "fallback": "/images/1024_1200x1200_200_0/8033499/IMG-20190728-WA0065.jpg",
+      "pages": [
+        "/es/galeria"
+      ]
+    },
+    {
+      "id": "photo-2020-12-21-17-45-36",
+      "label": "Foto 12",
+      "section": "Galería",
+      "kind": "image",
+      "file": "PHOTO-2020-12-21-17-45-36.jpg",
+      "fallback": "/images/1024_900x900_350_0/8033483/PHOTO-2020-12-21-17-45-36.jpg",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "photo-2020-12-24-18-21-49",
+      "label": "Foto 13",
+      "section": "Galería",
+      "kind": "image",
+      "file": "PHOTO-2020-12-24-18-21-49.jpg",
+      "fallback": "/images/1024_1500x1500_250_0/8033490/PHOTO-2020-12-24-18-21-49.jpg",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "photo-2020-12-24-18-23-44",
+      "label": "Foto 14",
+      "section": "Galería",
+      "kind": "image",
+      "file": "PHOTO-2020-12-24-18-23-44.jpg",
+      "fallback": "/images/1024_1500x1500_250_0/8033487/PHOTO-2020-12-24-18-23-44.jpg",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "photo-2020-12-31-13-55-00",
+      "label": "Foto 15",
+      "section": "Galería",
+      "kind": "image",
+      "file": "PHOTO-2020-12-31-13-55-00.jpg",
+      "fallback": "/images/1024_1500x1500_250_0/8033485/PHOTO-2020-12-31-13-55-00.jpg",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "photo-2021-01-06-11-17-04",
+      "label": "Foto 16",
+      "section": "Galería",
+      "kind": "image",
+      "file": "PHOTO-2021-01-06-11-17-04.jpg",
+      "fallback": "/images/1024_1200x1200_200_0/8071991/PHOTO-2021-01-06-11-17-04.jpg",
+      "pages": [
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "photo-2021-05-30-18-37-07",
+      "label": "Foto 17",
+      "section": "Galería",
+      "kind": "image",
+      "file": "PHOTO-2021-05-30-18-37-07.jpg",
+      "fallback": "/images/1024_1536x1536_256_0/8071997/PHOTO-2021-05-30-18-37-07.jpg",
+      "pages": [
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "photo-2021-08-21-00-09-39",
+      "label": "Foto 18",
+      "section": "Galería",
+      "kind": "image",
+      "file": "PHOTO-2021-08-21-00-09-39.jpg",
+      "fallback": "/images/1024_768x768_128_0/8072000/PHOTO-2021-08-21-00-09-39.jpg",
+      "pages": [
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "photo-2021-11-05-19-30-27",
+      "label": "Foto 19",
+      "section": "Galería",
+      "kind": "image",
+      "file": "PHOTO-2021-11-05-19-30-27.jpg",
+      "fallback": "/images/1024_768x768_128_0/8071994/PHOTO-2021-11-05-19-30-27.jpg",
+      "pages": [
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "photo-2022-07-13-12-38-44",
+      "label": "Foto 20",
+      "section": "Galería",
+      "kind": "image",
+      "file": "PHOTO-2022-07-13-12-38-44.jpg",
+      "fallback": "/images/1024_681x683_171_0/8033455/PHOTO-2022-07-13-12-38-44.jpg",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "photo-2022-08-16-00-39-25",
+      "label": "Foto 21",
+      "section": "Galería",
+      "kind": "image",
+      "file": "PHOTO-2022-08-16-00-39-25.jpg",
+      "fallback": "/images/1024_1148x1150_449_0/8033456/PHOTO-2022-08-16-00-39-25.jpg",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "photo-2022-08-22-09-58-34",
+      "label": "Foto 22",
+      "section": "Galería",
+      "kind": "image",
+      "file": "PHOTO-2022-08-22-09-58-34.jpg",
+      "fallback": "/images/1024_768x769_0_127/8033457/PHOTO-2022-08-22-09-58-34.jpg",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "photo-2022-11-13-23-14-34",
+      "label": "Foto 23",
+      "section": "Galería",
+      "kind": "image",
+      "file": "PHOTO-2022-11-13-23-14-34.jpg",
+      "fallback": "/images/1024_768x769_0_127/8033463/PHOTO-2022-11-13-23-14-34.jpg",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "photo-2024-02-06-11-15-07",
+      "label": "Foto 24",
+      "section": "Galería",
+      "kind": "image",
+      "file": "PHOTO-2024-02-06-11-15-07.jpg",
+      "fallback": "/images/1024_764x766_129_0/8033430/PHOTO-2024-02-06-11-15-07.jpg",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "photo-2024-02-06-11-15-071",
+      "label": "Foto 25",
+      "section": "Galería",
+      "kind": "image",
+      "file": "PHOTO-2024-02-06-11-15-071.jpg",
+      "fallback": "/images/1024_766x768_128_0/8033426/PHOTO-2024-02-06-11-15-071.jpg",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "photo-2024-02-06-11-15-09",
+      "label": "Foto 26",
+      "section": "Galería",
+      "kind": "image",
+      "file": "PHOTO-2024-02-06-11-15-09.jpg",
+      "fallback": "/images/1024_1198x1200_201_0/8033432/PHOTO-2024-02-06-11-15-09.jpg",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "photo-2024-02-06-11-15-10",
+      "label": "Foto 27",
+      "section": "Galería",
+      "kind": "image",
+      "file": "PHOTO-2024-02-06-11-15-10.jpg",
+      "fallback": "/images/1024_897x899_351_0/8033435/PHOTO-2024-02-06-11-15-10.jpg",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "photo-2024-02-19-20-05-12",
+      "label": "Foto 28",
+      "section": "Galería",
+      "kind": "image",
+      "file": "PHOTO-2024-02-19-20-05-12.jpg",
+      "fallback": "/images/1024_1179x1181_296_0/8033400/PHOTO-2024-02-19-20-05-12.jpg",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "photo-2024-02-20-00-16-53",
+      "label": "Foto 29",
+      "section": "Galería",
+      "kind": "image",
+      "file": "PHOTO-2024-02-20-00-16-53.jpg",
+      "fallback": "/images/1024_718x720_180_0/8033399/PHOTO-2024-02-20-00-16-53.jpg",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "photo-2024-02-20-12-20-19",
+      "label": "Foto 30",
+      "section": "Galería",
+      "kind": "image",
+      "file": "PHOTO-2024-02-20-12-20-19.jpg",
+      "fallback": "/images/1024_610x612_153_0/8033412/PHOTO-2024-02-20-12-20-19.jpg",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "prev1",
+      "label": "Portada de vídeo 1",
+      "section": "Galería",
+      "kind": "poster",
+      "file": "prev1.png",
+      "fallback": "/images/1920/7871722/prev1.png",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "prev2",
+      "label": "Portada de vídeo 2",
+      "section": "Galería",
+      "kind": "poster",
+      "file": "prev2.png",
+      "fallback": "/images/1920/7871720/prev2.png",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "prev3",
+      "label": "Portada de vídeo 3",
+      "section": "Galería",
+      "kind": "poster",
+      "file": "prev3.png",
+      "fallback": "/images/1920/7871717/prev3.png",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "whatsappimage2024-03-21at14-56-23",
+      "label": "Foto 31",
+      "section": "Galería",
+      "kind": "image",
+      "file": "WhatsAppImage2024-03-21at14.56.23.jpeg",
+      "fallback": "/images/1024_1533x1536_257_0/8033393/WhatsAppImage2024-03-21at14.56.23.jpeg",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "whatsappimage2024-03-25at12-31-38",
+      "label": "Foto 32",
+      "section": "Galería",
+      "kind": "image",
+      "file": "WhatsAppImage2024-03-25at12.31.38.jpeg",
+      "fallback": "/images/1024_837x837_121_0/8072243/WhatsAppImage2024-03-25at12.31.38.jpeg",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "whatsappimage2024-03-25at12-31-39",
+      "label": "Foto 33",
+      "section": "Galería",
+      "kind": "image",
+      "file": "WhatsAppImage2024-03-25at12.31.39.jpeg",
+      "fallback": "/images/1024_1075x1075_2_0/8072239/WhatsAppImage2024-03-25at12.31.39.jpeg",
+      "pages": [
+        "/es/galeria",
+        "/gd/galeria"
+      ]
+    },
+    {
+      "id": "mg-3975vvv",
+      "label": "Fondo 1",
+      "section": "Inicio",
+      "kind": "background",
+      "file": "_MG_3975vvv.jpg",
+      "fallback": "/images/1920/7798157/_MG_3975vvv.jpg",
+      "pages": [
+        "/es",
+        "/gd"
+      ]
+    },
+    {
+      "id": "audience-band-concert-1105666",
+      "label": "Fondo 2",
+      "section": "Inicio",
+      "kind": "background",
+      "file": "audience-band-concert-1105666.jpg",
+      "fallback": "/images/1680/2441091/audience-band-concert-1105666.jpg",
+      "pages": [
+        "/es",
+        "/gd"
+      ]
+    },
+    {
+      "id": "boda1",
+      "label": "Foto 1",
+      "section": "Inicio",
+      "kind": "image",
+      "file": "Boda1.jpg",
+      "fallback": "/images/1024_1080x719_0_45/7847930/Boda1.jpg",
+      "pages": [
+        "/es",
+        "/gd"
+      ]
+    },
+    {
+      "id": "dsc-2996",
+      "label": "Foto 2",
+      "section": "Inicio",
+      "kind": "image",
+      "file": "DSC_2996.JPG",
+      "fallback": "/images/1024_6016x4008_0_3/7847888/DSC_2996.JPG",
+      "pages": [
+        "/es",
+        "/gd"
+      ]
+    },
+    {
+      "id": "img-20190518-171940",
+      "label": "Foto 3",
+      "section": "Inicio",
+      "kind": "image",
+      "file": "IMG_20190518_171940.jpg",
+      "fallback": "/images/1024_4000x2665_0_167/7847292/IMG_20190518_171940.jpg",
+      "pages": [
+        "/es",
+        "/gd"
+      ]
+    },
+    {
+      "id": "img-20190815-205102",
+      "label": "Foto 4",
+      "section": "Inicio",
+      "kind": "image",
+      "file": "IMG_20190815_205102.jpg",
+      "fallback": "/images/1024_4000x2665_0_167/7847307/IMG_20190815_205102.jpg",
+      "pages": [
+        "/es",
+        "/gd"
+      ]
+    },
+    {
+      "id": "img-20190517-wa0033",
+      "label": "Foto 5",
+      "section": "Inicio",
+      "kind": "image",
+      "file": "IMG-20190517-WA0033.jpg",
+      "fallback": "/images/1024_1595x1063_2_0/7847286/IMG-20190517-WA0033.jpg",
+      "pages": [
+        "/es",
+        "/gd"
+      ]
+    },
+    {
+      "id": "img-20190708-wa0046",
+      "label": "Foto 6",
+      "section": "Inicio",
+      "kind": "image",
+      "file": "IMG-20190708-WA0046.jpg",
+      "fallback": "/images/1024_1227x818_67_0/7847285/IMG-20190708-WA0046.jpg",
+      "pages": [
+        "/es",
+        "/gd"
+      ]
+    },
+    {
+      "id": "mg-3965vvv",
+      "label": "Foto 1",
+      "section": "Pasacalles",
+      "kind": "image",
+      "file": "_MG_3965vvv.jpg",
+      "fallback": "/images/800x800/7848257/_MG_3965vvv.jpg",
+      "pages": [
+        "/es/pasacalles",
+        "/gd/pasacalles"
+      ]
+    },
+    {
+      "id": "img-20190830-100647",
+      "label": "Foto 2",
+      "section": "Pasacalles",
+      "kind": "image",
+      "file": "IMG_20190830_100647.jpg",
+      "fallback": "/images/800x800_3000x4000_500_-500_90/7848245/IMG_20190830_100647.jpg",
+      "pages": [
+        "/es/pasacalles",
+        "/gd/pasacalles"
+      ]
+    },
+    {
+      "id": "img-20190929-124858",
+      "label": "Foto 3",
+      "section": "Pasacalles",
+      "kind": "image",
+      "file": "IMG_20190929_124858.jpg",
+      "fallback": "/images/800x800/7848231/IMG_20190929_124858.jpg",
+      "pages": [
+        "/es/pasacalles",
+        "/gd/pasacalles"
+      ]
+    },
+    {
+      "id": "img-20190929-125827",
+      "label": "Foto 4",
+      "section": "Pasacalles",
+      "kind": "image",
+      "file": "IMG_20190929_125827.jpg",
+      "fallback": "/images/800x800_3000x4000_500_-500_90/7848246/IMG_20190929_125827.jpg",
+      "pages": [
+        "/es/pasacalles",
+        "/gd/pasacalles"
+      ]
+    },
+    {
+      "id": "img-20190815-194841",
+      "label": "Foto 1",
+      "section": "Procesiones",
+      "kind": "image",
+      "file": "IMG_20190815_194841.jpg",
+      "fallback": "/images/800x800/7909398/IMG_20190815_194841.jpg",
+      "pages": [
+        "/es/procesiones",
+        "/gd/procesiones"
+      ]
+    },
+    {
+      "id": "img-20190815-195858",
+      "label": "Foto 2",
+      "section": "Procesiones",
+      "kind": "image",
+      "file": "IMG_20190815_195858.jpg",
+      "fallback": "/images/800x800_3000x4000_500_-500_90/7909400/IMG_20190815_195858.jpg",
+      "pages": [
+        "/es/procesiones",
+        "/gd/procesiones"
+      ]
+    },
+    {
+      "id": "background-image",
+      "label": "Fondo 1",
+      "section": "Sacramentos",
+      "kind": "background",
+      "file": "background-image.png",
+      "fallback": "/images/1680/5264334/background-image.png",
+      "pages": [
+        "/es/actuaciones-de-escenario",
+        "/es/biografia",
+        "/es/contacto",
+        "/es/despedidas-de-solter",
+        "/es/fiestas-patronales",
+        "/es/galeria",
+        "/es/pasacalles",
+        "/es/procesiones",
+        "/es/sacramentos",
+        "/gd/actuaciones-de-escenario",
+        "/gd/biografia",
+        "/gd/contacto",
+        "/gd/despedidas-de-solter",
+        "/gd/fiestas-patronales",
+        "/gd/galeria",
+        "/gd/pasacalles",
+        "/gd/procesiones",
+        "/gd/sacramentos"
+      ]
+    },
+    {
+      "id": "bogomil-mihaylov-519207-unsplash-2",
+      "label": "Fondo 1",
+      "section": "Subpágina",
+      "kind": "background",
+      "file": "bogomil-mihaylov-519207-unsplash-2.jpg",
+      "fallback": "/images/1920_4271x2848_0_0/2441907/bogomil-mihaylov-519207-unsplash-2.jpg",
+      "pages": [
+        "/es/subpage"
+      ]
+    }
+  ]
+}

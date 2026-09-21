@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Panel de fotos - Charanga Ponte Una Milnoh</title>
+<meta name="robots" content="noindex,nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/png" href="/images/32x32/7802337/LogoPonteUnaMilnoh.png" sizes="32x32" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<link rel="stylesheet" href="/g/fonts.css?family=Josefin+Sans:300,regular,700%7CLato:300,regular,700&amp;subset=latin&amp;display=swap" />
+<link rel="stylesheet" href="/assets/css/admin.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <img src="/images/160/7705591/LogoPonteUnaMilnoh.png" alt="Charanga Ponte Una Milnoh" />
+  <h1>Panel de fotos</h1>
+  <div class="spacer"></div>
+  <span class="user" id="user"></span>
+  <button type="button" class="button ghost" id="logout" hidden>Salir</button>
+</header>
+
+<main>
+  <p class="notice" id="notice" hidden></p>
+
+  <section class="card" id="login" hidden>
+    <h2>Entrar</h2>
+    <p>Accede con el correo y la contraseña que te hemos dado para gestionar las fotos de la web.</p>
+    <form id="login-form">
+      <label for="email">Correo electrónico</label>
+      <input type="email" id="email" autocomplete="username" required />
+
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" autocomplete="current-password" required />
+
+      <p>
+        <button type="submit" class="button" id="login-submit">Entrar</button>
+      </p>
+    </form>
+  </section>
+
+  <div id="panel" hidden>
+    <div class="toolbar">
+      <input type="search" id="search" placeholder="Buscar por sección, página o nombre de archivo…" aria-label="Buscar fotos" />
+      <a class="button" href="/es/" target="_blank" rel="noopener">Ver la web</a>
+    </div>
+    <p class="notice">
+      Arrastra una imagen sobre cualquier tarjeta, o pulsa <strong>Cambiar foto</strong>.
+      Formatos: JPG, PNG, WebP o AVIF, hasta 8 MB. Los cambios pueden tardar unos
+      minutos en verse en la web publicada.
+    </p>
+    <div id="sections"></div>
+  </div>
+</main>
+
+<script type="module" src="/assets/js/admin.js"></script>
+<script type="module">
+  // The logout button only makes sense once a session exists; admin.js toggles
+  // the panel, so mirror that here to keep the markup declarative.
+  const panel = document.getElementById('panel');
+  const logout = document.getElementById('logout');
+  new MutationObserver(() => { logout.hidden = panel.hidden; })
+    .observe(panel, { attributes: true, attributeFilter: ['hidden'] });
+</script>
+
+</body>
+</html>

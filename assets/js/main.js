@@ -8,9 +8,11 @@ import initParallax from './parallax.js';
 import initSliders from './slider.js';
 import initLightbox from './lightbox.js';
 import initMaps from './maps.js';
+import initSlots from './slots.js';
 
 function boot() {
-  initLazyload();
+  // Slot overrides run first so the lazy loader picks up the replaced sources.
+  initSlots().finally(() => initLazyload());
   initNav();
   initParallax();
   initSliders();
