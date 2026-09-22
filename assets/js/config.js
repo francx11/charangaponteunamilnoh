@@ -2,14 +2,12 @@
  * Supabase connection used by the public site (read only) and by the admin
  * panel (authenticated writes).
  *
- * Both values are safe to publish: the anon key is a public client key and the
- * bucket policies decide what it may do. See docs/supabase-setup.md.
- *
- * Replace the two placeholders with the values from
- * Supabase dashboard -> Project settings -> API.
+ * Both values are safe to publish: the publishable key is a public client
+ * key and the bucket policies decide what it may do. See
+ * docs/supabase-setup.md.
  */
-export const SUPABASE_URL = 'https://YOUR-PROJECT-ref.supabase.co';
-export const SUPABASE_ANON_KEY = 'YOUR-PUBLIC-ANON-KEY';
+export const SUPABASE_URL = 'https://mxtjxrguvsfldjoqofuh.supabase.co';
+export const SUPABASE_ANON_KEY = 'sb_publishable_Xttai6Y6FMsPRzTzoWnRHA_PX-pvIuR';
 
 /** Public storage bucket that holds the images the client uploads. */
 export const BUCKET = 'web-assets';
