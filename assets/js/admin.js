@@ -20,6 +20,7 @@ import {
 
 const MAX_BYTES = 8 * 1024 * 1024;
 const ACCEPTED = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
+const WEBP_QUALITY = 0.82;
 
 const el = (id) => document.getElementById(id);
 const supabase = isConfigured() ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
@@ -149,6 +150,32 @@ function renderSlot(slot) {
   return card;
 }
 
+// Re-encodes any accepted image to WebP client-side so the bucket only ever
+// stores one lightweight format. Falls back to the original file if the
+// browser can't decode it (createImageBitmap throwing) or toBlob is
+// unavailable, so an upload never hard-fails over this.
+async function toWebp(file) {
+  if (file.type === 'image/webp') return file;
+
+  const bitmap = await createImageBitmap(file);
+  const canvas = document.createElement('canvas');
+  canvas.width = bitmap.width;
+  canvas.height = bitmap.height;
+  canvas.getContext('2d').drawImage(bitmap, 0, 0);
+  bitmap.close();
+
+  const blob = await new Promise((resolve, reject) => {
+    canvas.toBlob(
+      (result) => (result ? resolve(result) : reject(new Error('toBlob returned null'))),
+      'image/webp',
+      WEBP_QUALITY
+    );
+  });
+
+  const name = file.name.replace(/\.[^.]+$/, '') + '.webp';
+  return new File([blob], name, { type: 'image/webp' });
+}
+
 async function readManifest() {
   const { data, error } = await supabase.storage.from(BUCKET).download(MANIFEST_OBJECT);
   if (error) return { slots: {} }; // First run: the manifest does not exist yet.
@@ -179,15 +206,24 @@ async function upload(slot, file, card) {
   }
 
   card.classList.add('busy');
-  notify(`Subiendo "${file.name}"…`);
+  notify(`Convirtiendo "${file.name}" a WebP…`);
 
-  const extension = (file.name.split('.').pop() || 'jpg').toLowerCase();
+  let payload = file;
+  try {
+    payload = await toWebp(file);
+  } catch {
+    // Browser couldn't re-encode it (old Safari, corrupt image…); ship the original instead.
+  }
+
+  const extension = (payload.name.split('.').pop() || 'jpg').toLowerCase();
   const path = `${UPLOAD_PREFIX}/${slot.id}.${extension}`;
+
+  notify(`Subiendo "${file.name}"…`);
 
   try {
     const { error } = await supabase.storage
       .from(BUCKET)
-      .upload(path, file, { upsert: true, contentType: file.type, cacheControl: '300' });
+      .upload(path, payload, { upsert: true, contentType: payload.type, cacheControl: '300' });
     if (error) throw error;
 
     // A slot can change extension; drop the previous object so nothing is orphaned.
