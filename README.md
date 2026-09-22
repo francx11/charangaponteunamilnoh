@@ -96,21 +96,21 @@ appear in this repository.
 4. For the custom domain, set it under **Settings → Pages**, which creates a
    `CNAME` file, and point the DNS records at GitHub.
 
-### Performance clips are not in the repository yet
+### Performance clips are not in the repository
 
 Six performance videos (291 MB total, largest 81.9 MB) are referenced by
 `es|gd/{galeria,actuaciones-de-escenario,pasacalles,sacramentos}` but are not
-tracked in Git — where to host them hasn't been decided. The files are
-gitignored (`images/**/*.mp4`) and `scripts/check-assets.mjs` explicitly skips
-their 12 references (6 files × 2 locales) instead of failing CI over assets
-that are intentionally absent. **Until they're hosted somewhere, those four
-pages show an empty video player in production.**
+tracked in Git — the files are gitignored (`images/**/*.mp4`) and
+`scripts/check-assets.mjs` explicitly skips their 12 references (6 files × 2
+locales) instead of failing CI over assets that are intentionally absent.
 
-To wire one up: put the files somewhere with a public URL (Cloudflare R2 has
-no egress fee and comfortably fits 291 MB in its free tier; Supabase Storage
-also works but its free egress is 5 GB/month project-wide), point each
-`<video>`'s `<source src>` at that URL, and remove the corresponding entries
-from `PENDING_EXTERNAL` in `scripts/check-assets.mjs`.
+They're hosted in the same Supabase bucket as the client's photos instead of
+a separate service (see [docs/supabase-setup.md](docs/supabase-setup.md),
+"Upload the performance clips"). `assets/js/videos.js` resolves each
+`<video data-video="id">` against `VIDEO_SOURCES` in `assets/js/config.js`:
+configured and uploaded, it plays; not yet, it shows a "Vídeo próximamente"
+placeholder instead of a broken player. Nothing else needs editing once a
+clip is uploaded — the URL is derived from the id automatically.
 
 ### Repository size
 

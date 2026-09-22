@@ -1,8 +1,10 @@
 /**
- * Performance clips ship outside the repository until hosting is decided
- * (see VIDEO_SOURCES in config.js). Every <video data-video="id"> either
- * gets its real source wired in, or is swapped for a static placeholder so a
- * broken player never reaches a visitor.
+ * Performance clips ship outside the repository, hosted in the same
+ * Supabase bucket as the client's photos (see VIDEO_SOURCES in config.js).
+ * Every <video data-video="id"> either gets its real source wired in, or -
+ * while Supabase isn't configured, or a clip hasn't been uploaded yet - is
+ * swapped for a static placeholder so a broken player never reaches a
+ * visitor.
  */
 import { VIDEO_SOURCES } from './config.js';
 
