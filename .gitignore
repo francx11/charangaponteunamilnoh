@@ -22,3 +22,7 @@ node_modules/
 
 # Playwright MCP session output
 /.playwright-mcp/
+
+# Performance clips (291 MB) - hosting undecided, see scripts/check-assets.mjs
+# for the explicit allowlist that keeps CI green while these stay untracked.
+images/**/*.mp4
