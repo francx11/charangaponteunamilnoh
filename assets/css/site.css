@@ -148,3 +148,41 @@
 }
 
 .slider-container .slick-dots li.slick-active button { background: #dacc1f; }
+
+/* ---- Pending video placeholder (hosting not decided yet) ---------------- */
+.video-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  aspect-ratio: 16 / 9;
+  border: 2px dashed #6c419a;
+  border-radius: 6px;
+  background: #f4f1f8 center/cover no-repeat;
+  color: #6c419a;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 12px;
+}
+
+.video-placeholder.has-poster {
+  position: relative;
+  color: #fff;
+  border-style: solid;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.video-placeholder.has-poster::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 4px;
+}
+
+.video-placeholder svg,
+.video-placeholder span {
+  position: relative;
+}

@@ -25,3 +25,20 @@ export const isConfigured = () =>
 
 export const publicUrl = (objectPath) =>
   `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${objectPath}`;
+
+/**
+ * Performance clips are not in the repository (see README.md, "Performance
+ * clips are not in the repository yet"). Each key is a video id set by
+ * assets/js/videos.js via data-video; null means "not hosted yet", and the
+ * site shows a placeholder in its place. Once a clip is hosted somewhere
+ * public, paste its URL here to make it play again - no other file needs to
+ * change.
+ */
+export const VIDEO_SOURCES = {
+  prev1: null,
+  prev2: null,
+  prev3: null,
+  miniaturaactuaciones: null,
+  pasacalles: null,
+  sacramentos: null
+};

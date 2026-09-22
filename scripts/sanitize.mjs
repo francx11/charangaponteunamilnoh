@@ -102,7 +102,7 @@ function removeElementByMarker(html, marker, levels = 0) {
 }
 
 /** Modules imported by main.js, preloaded so they are fetched in parallel. */
-const MODULES = ['nav', 'lazyload', 'parallax', 'slider', 'lightbox', 'maps', 'slots', 'config'];
+const MODULES = ['nav', 'lazyload', 'parallax', 'slider', 'lightbox', 'maps', 'slots', 'videos', 'config'];
 
 /**
  * Anything inside the banner is above the fold, so it must not wait for the
@@ -151,6 +151,26 @@ function eagerLoadBanner(html) {
   return { html: html.slice(0, bannerStart) + out + html.slice(bannerEnd), hero };
 }
 
+/** The route directory a page lives in, used to name videos that have no data-slot. */
+function routeSlug(file) {
+  const segments = file.split(/[\\/]/).filter((s) => s && s !== 'index.html' && s !== 'es' && s !== 'gd');
+  return segments[0] || 'video';
+}
+
+/**
+ * Tags every <video> with data-video, the id assets/js/videos.js uses to look
+ * up VIDEO_SOURCES. Reuses the existing data-slot when the video's poster is
+ * itself an admin-managed slot; otherwise falls back to the page's route.
+ */
+function tagVideos(html, file) {
+  return html.replace(/<video\b([^>]*)>/g, (full, attrs) => {
+    if (/\bdata-video=/.test(attrs)) return full;
+    const slot = /data-slot="([^"]+)"/.exec(attrs);
+    const id = slot ? slot[1] : routeSlug(file);
+    return `<video data-video="${id}"${attrs}>`;
+  });
+}
+
 function sanitize(html, file) {
   const before = countAll(html);
   let out = html;
@@ -197,6 +217,9 @@ function sanitize(html, file) {
   const eager = eagerLoadBanner(out);
   out = eager.html;
 
+  // 10b. Videos need an id so assets/js/videos.js can find their config entry.
+  out = tagVideos(out, file);
+
   // 11. Wire in the replacement stylesheet and modules.
   if (!out.includes('/assets/css/site.css')) {
     out = out.replace(/(<link rel="stylesheet"[^>]*id="customcss"\/>)/, `$1${STYLESHEET_TAG}`);
@@ -225,6 +248,8 @@ function sanitize(html, file) {
   if (/webcard\.|app\.bundle|Cookiebot|custom\.240322113204|Lógica para verificar/.test(out)) {
     throw new Error(`${file}: proprietary runtime reference survived`);
   }
+  const untaggedVideos = (out.match(/<video\b(?![^>]*data-video=)[^>]*>/g) || []).length;
+  if (untaggedVideos) throw new Error(`${file}: ${untaggedVideos} <video> element(s) missing data-video`);
 
   return { out, before, after };
 }

@@ -9,6 +9,7 @@ import initSliders from './slider.js';
 import initLightbox from './lightbox.js';
 import initMaps from './maps.js';
 import initSlots from './slots.js';
+import initVideos from './videos.js';
 
 function boot() {
   // Slot overrides run first so the lazy loader picks up the replaced sources.
@@ -18,6 +19,7 @@ function boot() {
   initSliders();
   initLightbox();
   initMaps();
+  initVideos();
 }
 
 if (document.readyState === 'loading') {
