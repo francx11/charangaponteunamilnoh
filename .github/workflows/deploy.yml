@@ -19,6 +19,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # build-sitemap.mjs reads each page's last commit date; a shallow
+          # checkout only has the latest commit, which breaks that for every
+          # page the latest commit didn't touch.
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22

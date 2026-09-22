@@ -4,7 +4,8 @@
  * Usage: node scripts/build-sitemap.mjs [--check]
  */
 
-import { readFileSync, writeFileSync, statSync, globSync } from 'node:fs';
+import { readFileSync, writeFileSync, globSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { sep } from 'node:path';
 
 const ORIGIN = 'https://charangaponteunamilnoh.com';
@@ -15,6 +16,12 @@ const EXCLUDED = [/\/404$/, /\/subpage$/];
 
 const toPosix = (p) => p.split(sep).join('/');
 const routeOf = (page) => '/' + toPosix(page).replace(/\/index\.html$/, '');
+
+// The commit date, not the filesystem mtime: a fresh checkout (CI, a fresh
+// clone) stamps every file with the checkout time, which would make --check
+// fail on every machine but the one that generated the file.
+const lastCommitDate = (page) =>
+  execFileSync('git', ['log', '-1', '--format=%cs', '--', page]).toString().trim();
 
 const pages = globSync(['es/**/index.html', 'gd/**/index.html']).sort();
 
@@ -27,7 +34,7 @@ const urls = pages
   })
   .map(({ page, route }) => ({
     loc: ORIGIN + route,
-    lastmod: statSync(page).mtime.toISOString().slice(0, 10),
+    lastmod: lastCommitDate(page),
     priority: /^\/(es|gd)$/.test(route) ? '1.00' : '0.80'
   }));
 
