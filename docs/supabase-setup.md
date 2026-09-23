@@ -40,41 +40,97 @@ Three kinds of objects live here:
 
 ## 3. Policies
 
-Public read, authenticated write. Run this in **SQL Editor**:
+Public read; writes only for accounts on an explicit admin allowlist. Being
+signed in is **not** enough: if public sign-up were ever re-enabled by mistake,
+a freshly registered account still couldn't touch the bucket. Run this in
+**SQL Editor** (it is idempotent, so it also migrates a project that still has
+the older "any authenticated user may write" policies):
 
 ```sql
+-- Allowlist. Lives in a schema the Data API doesn't expose, with RLS on and no
+-- grants, so no client can read or change it - only the SQL Editor can.
+create schema if not exists private;
+
+create table if not exists private.admins (
+  user_id    uuid primary key references auth.users (id) on delete cascade,
+  note       text,
+  created_at timestamptz not null default now()
+);
+alter table private.admins enable row level security;
+revoke all on private.admins from public, anon, authenticated;
+
+-- Policies run as the caller, who can't read private.admins; this function
+-- does the lookup as its owner and only ever answers about the caller.
+create or replace function private.is_admin()
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select exists (select 1 from private.admins where user_id = (select auth.uid()));
+$$;
+revoke all on function private.is_admin() from public, anon;
+grant usage on schema private to authenticated;
+grant execute on function private.is_admin() to authenticated;
+
 -- Anyone may read the bucket (the site is public).
+drop policy if exists "web-assets public read" on storage.objects;
 create policy "web-assets public read"
 on storage.objects for select
 to anon, authenticated
 using (bucket_id = 'web-assets');
 
--- Only signed-in users may add, replace or delete objects.
-create policy "web-assets authenticated insert"
+-- Only allowlisted admins may add, replace or delete objects.
+drop policy if exists "web-assets authenticated insert" on storage.objects;
+drop policy if exists "web-assets authenticated update" on storage.objects;
+drop policy if exists "web-assets authenticated delete" on storage.objects;
+drop policy if exists "web-assets admin insert" on storage.objects;
+drop policy if exists "web-assets admin update" on storage.objects;
+drop policy if exists "web-assets admin delete" on storage.objects;
+
+create policy "web-assets admin insert"
 on storage.objects for insert
 to authenticated
-with check (bucket_id = 'web-assets');
+with check (bucket_id = 'web-assets' and (select private.is_admin()));
 
-create policy "web-assets authenticated update"
+create policy "web-assets admin update"
 on storage.objects for update
 to authenticated
-using (bucket_id = 'web-assets')
-with check (bucket_id = 'web-assets');
+using (bucket_id = 'web-assets' and (select private.is_admin()))
+with check (bucket_id = 'web-assets' and (select private.is_admin()));
 
-create policy "web-assets authenticated delete"
+create policy "web-assets admin delete"
 on storage.objects for delete
 to authenticated
-using (bucket_id = 'web-assets');
+using (bucket_id = 'web-assets' and (select private.is_admin()));
 ```
 
-## 4. Create the client's user
+Until someone is added to `private.admins` (next step), nobody can write -
+the panel still signs in, but uploads fail with a policy error.
 
-**Authentication → Users → Add user**: enter the client's email and a password,
-and tick *Auto Confirm User*.
+## 4. Create the panel's users
+
+**Authentication → Users → Add user**: enter the person's email and a password,
+and tick *Auto Confirm User*. (Or **Invite user**, which emails them a link to
+set their own password.)
 
 Then, under **Authentication → Sign In / Providers**, disable **Allow new users
-to sign up**. Only the accounts you create can reach the panel — there is no
-public registration.
+to sign up**. There is no public registration.
+
+Finally, put the account on the allowlist - an account that isn't there can
+sign in but can't change anything:
+
+```sql
+insert into private.admins (user_id, note)
+select id, 'client' from auth.users where email = 'person@example.com'
+on conflict (user_id) do nothing;
+```
+
+To revoke someone, delete their row (`delete from private.admins where user_id
+= '...'`) or delete the user in **Authentication → Users**; the row goes with
+it. `select a.*, u.email from private.admins a join auth.users u on u.id =
+a.user_id;` lists who has access.
 
 ## 5. Check it end to end
 
@@ -133,6 +189,24 @@ node scripts/build-slots.mjs --check  # reports what would change
 Slot ids are stable as long as the file names are. Renaming an image file
 orphans its uploaded override; delete the stale object in Storage if that
 happens.
+
+## Upgrading supabase-js
+
+The admin panel doesn't load supabase-js from a CDN: a pinned copy of the UMD
+build lives in [`assets/vendor/`](../assets/vendor/), so nothing outside this
+repository ever runs next to a signed-in session, and the CSP in
+[`admin.html`](../admin.html) can stay at `script-src 'self'`. To upgrade:
+
+```bash
+V=2.x.y   # the new version
+curl -fL "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@$V/dist/umd/supabase.js"   -o "assets/vendor/supabase-js-$V.umd.js"
+# Compare with the "hash" jsDelivr lists for /dist/umd/supabase.js:
+curl -s "https://data.jsdelivr.com/v1/packages/npm/@supabase/supabase-js@$V?structure=flat"
+openssl dgst -sha256 -binary "assets/vendor/supabase-js-$V.umd.js" | openssl base64
+```
+
+Then point the `<script>` in `admin.html` at the new file, delete the old one,
+and sign in to the panel once to check it still works.
 
 ## Free tier limits
 

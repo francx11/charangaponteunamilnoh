@@ -7,7 +7,6 @@
  * each change and is what the public site reads.
  */
 
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 import {
   SUPABASE_URL,
   SUPABASE_ANON_KEY,
@@ -21,6 +20,10 @@ import {
 const MAX_BYTES = 8 * 1024 * 1024;
 const ACCEPTED = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
 const WEBP_QUALITY = 0.82;
+
+// supabase-js is loaded by a classic <script> in admin.html from a pinned,
+// vendored copy, so no third-party CDN ever runs code next to the session.
+const { createClient } = window.supabase;
 
 const el = (id) => document.getElementById(id);
 const supabase = isConfigured() ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
@@ -262,6 +265,7 @@ async function restore(slot, card) {
 async function showPanel(session) {
   el('login').hidden = true;
   el('panel').hidden = false;
+  el('logout').hidden = false;
   el('user').textContent = session.user.email;
 
   const response = await fetch('/assets/data/slots.json');
@@ -272,10 +276,19 @@ async function showPanel(session) {
 
 function showLogin() {
   el('panel').hidden = true;
+  el('logout').hidden = true;
+  el('user').textContent = '';
   el('login').hidden = false;
 }
 
 async function main() {
+  // The CSP can't carry frame-ancestors from a <meta>, so refuse to run inside
+  // a frame: nobody gets to overlay the login or the panel (clickjacking).
+  if (window.top !== window.self) {
+    document.body.textContent = '';
+    return;
+  }
+
   if (!supabase) {
     notify('Supabase todavía no está configurado. Añade la URL y la clave anónima en assets/js/config.js.', 'error');
     el('login').hidden = true;

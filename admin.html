@@ -4,9 +4,17 @@
 <meta charset="utf-8" />
 <title>Panel de fotos - Charanga Ponte Una Milnoh</title>
 <meta name="robots" content="noindex,nofollow" />
+<!--
+  GitHub Pages can't send response headers, so the policy lives here. Only
+  same-origin code runs (no inline scripts, no CDNs: supabase-js is vendored
+  under /assets/vendor), and the only remote origin reachable is our Supabase
+  project. frame-ancestors is ignored in <meta>; admin.js refuses to run
+  framed instead.
+-->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' blob: data: https://mxtjxrguvsfldjoqofuh.supabase.co; connect-src 'self' https://mxtjxrguvsfldjoqofuh.supabase.co; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'" />
+<meta name="referrer" content="no-referrer" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="icon" type="image/png" href="/images/32x32/7802337/LogoPonteUnaMilnoh.png" sizes="32x32" />
-<link rel="preconnect" href="https://cdn.jsdelivr.net" />
 <link rel="stylesheet" href="/g/fonts.css?family=Josefin+Sans:300,regular,700%7CLato:300,regular,700&amp;subset=latin&amp;display=swap" />
 <link rel="stylesheet" href="/assets/css/admin.css" />
 </head>
@@ -54,15 +62,10 @@
   </div>
 </main>
 
+<!-- Pinned copy of @supabase/supabase-js (UMD, exposes window.supabase).
+     To upgrade, see docs/supabase-setup.md, "Upgrading supabase-js". -->
+<script src="/assets/vendor/supabase-js-2.117.1.umd.js"></script>
 <script type="module" src="/assets/js/admin.js"></script>
-<script type="module">
-  // The logout button only makes sense once a session exists; admin.js toggles
-  // the panel, so mirror that here to keep the markup declarative.
-  const panel = document.getElementById('panel');
-  const logout = document.getElementById('logout');
-  new MutationObserver(() => { logout.hidden = panel.hidden; })
-    .observe(panel, { attributes: true, attributeFilter: ['hidden'] });
-</script>
 
 </body>
 </html>
