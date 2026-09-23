@@ -45,8 +45,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      # Publish the site, not the repository: tooling, docs and repo metadata
+      # have no business being served from the domain.
+      - name: Stage the site
+        run: >
+          rsync -a
+          --exclude='.git*' --exclude='.github/' --exclude='_site/'
+          --exclude='docs/' --exclude='scripts/' --exclude='README.md'
+          ./ _site/
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
       - id: deployment
         uses: actions/deploy-pages@v4
