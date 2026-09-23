@@ -11,7 +11,7 @@ without it.
 ```
 index.html            language redirect (es | gd)
 404.html              copy of es/404 for GitHub Pages
-admin.html            client photo panel (noindex)
+admin/index.html      client photo panel at /admin/ (noindex)
 es/  gd/              the 27 pages; gd is the "granaíno" locale, not Gaelic
 assets/css/site.css   styles owned by the refactor (lightbox, slider, CTA)
 assets/css/admin.css  admin panel styles
@@ -32,7 +32,7 @@ served from the repository root rather than opened with `file://`.
 
 ```bash
 python -m http.server 8080
-# http://127.0.0.1:8080/es/   http://127.0.0.1:8080/admin.html
+# http://127.0.0.1:8080/es/   http://127.0.0.1:8080/admin/
 ```
 
 Edit HTML, CSS and JS directly. There is nothing to compile.

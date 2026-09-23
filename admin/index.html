@@ -45,6 +45,40 @@
         <button type="submit" class="button" id="login-submit">Entrar</button>
       </p>
     </form>
+    <p><button type="button" class="link" id="show-forgot">¿Has olvidado tu contraseña?</button></p>
+  </section>
+
+  <section class="card" id="forgot" hidden>
+    <h2>Recuperar contraseña</h2>
+    <p>Escribe tu correo y te enviaremos un enlace para elegir una contraseña nueva.</p>
+    <form id="forgot-form">
+      <label for="forgot-email">Correo electrónico</label>
+      <input type="email" id="forgot-email" autocomplete="username" required />
+
+      <p>
+        <button type="submit" class="button" id="forgot-submit">Enviar enlace</button>
+      </p>
+    </form>
+    <p><button type="button" class="link" id="back-to-login">Volver a entrar</button></p>
+  </section>
+
+  <section class="card" id="reset" hidden>
+    <h2>Nueva contraseña</h2>
+    <p>Elige una contraseña de al menos 10 caracteres.</p>
+    <form id="reset-form">
+      <!-- Lets password managers file the new password under the right account. -->
+      <input type="email" id="reset-username" autocomplete="username" readonly hidden />
+
+      <label for="new-password">Contraseña nueva</label>
+      <input type="password" id="new-password" autocomplete="new-password" minlength="10" required />
+
+      <label for="new-password-repeat">Repite la contraseña</label>
+      <input type="password" id="new-password-repeat" autocomplete="new-password" minlength="10" required />
+
+      <p>
+        <button type="submit" class="button" id="reset-submit">Guardar contraseña</button>
+      </p>
+    </form>
   </section>
 
   <div id="panel" hidden>

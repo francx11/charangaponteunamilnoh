@@ -18,15 +18,27 @@ import {
 } from './config.js';
 
 const MAX_BYTES = 8 * 1024 * 1024;
+const MIN_PASSWORD_LENGTH = 10;
 const ACCEPTED = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
 const WEBP_QUALITY = 0.82;
 
-// supabase-js is loaded by a classic <script> in admin.html from a pinned,
+// supabase-js is loaded by a classic <script> in admin/index.html from a pinned,
 // vendored copy, so no third-party CDN ever runs code next to the session.
 const { createClient } = window.supabase;
 
+// Read before createClient: supabase-js consumes the fragment of a link
+// coming from a password-reset email while it initialises.
+const fromEmail = new URLSearchParams(window.location.hash.slice(1));
+const linkError = fromEmail.get('error_code');
+let recovering = fromEmail.get('type') === 'recovery';
+
 const el = (id) => document.getElementById(id);
-const supabase = isConfigured() ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+// Implicit flow so a reset link works on any device: the PKCE default would
+// only accept it in the browser that asked for it, and the client is likely
+// to request it on a computer and open the email on a phone.
+const supabase = isConfigured()
+  ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { flowType: 'implicit' } })
+  : null;
 
 let catalogue = [];
 let manifest = { slots: {} };
@@ -262,10 +274,18 @@ async function restore(slot, card) {
   }
 }
 
+const VIEWS = ['login', 'forgot', 'reset', 'panel'];
+
+function showView(name) {
+  VIEWS.forEach((id) => {
+    el(id).hidden = id !== name;
+  });
+  el('logout').hidden = name !== 'panel';
+  if (name !== 'panel') el('user').textContent = '';
+}
+
 async function showPanel(session) {
-  el('login').hidden = true;
-  el('panel').hidden = false;
-  el('logout').hidden = false;
+  showView('panel');
   el('user').textContent = session.user.email;
 
   const response = await fetch('/assets/data/slots.json');
@@ -275,10 +295,71 @@ async function showPanel(session) {
 }
 
 function showLogin() {
-  el('panel').hidden = true;
-  el('logout').hidden = true;
-  el('user').textContent = '';
-  el('login').hidden = false;
+  showView('login');
+}
+
+// A reset link signs the user in with a short-lived session whose only job
+// here is to set a new password - don't open the panel until that's done.
+function route(session) {
+  if (recovering && session) {
+    el('reset-username').value = session.user.email;
+    showView('reset');
+  } else if (session) showPanel(session);
+  else showLogin();
+}
+
+async function requestReset(e) {
+  e.preventDefault();
+  const button = el('forgot-submit');
+  button.disabled = true;
+  const { error } = await supabase.auth.resetPasswordForEmail(el('forgot-email').value.trim(), {
+    redirectTo: `${window.location.origin}/admin/`
+  });
+  button.disabled = false;
+
+  // Same answer whether or not the address has an account, so this form
+  // can't be used to find out who has access to the panel.
+  if (!error) {
+    notify('Si ese correo tiene acceso al panel, te llegará un enlace en unos minutos. Revisa también la carpeta de spam.');
+  } else if (error.status === 429) {
+    notify('Demasiados intentos seguidos. Espera unos minutos y vuelve a probarlo.', 'error');
+  } else {
+    notify('No se pudo enviar el correo. Inténtalo de nuevo en unos minutos.', 'error');
+  }
+}
+
+async function saveNewPassword(e) {
+  e.preventDefault();
+  const password = el('new-password').value;
+  if (password.length < MIN_PASSWORD_LENGTH) {
+    notify(`La contraseña tiene que tener al menos ${MIN_PASSWORD_LENGTH} caracteres.`, 'error');
+    return;
+  }
+  if (password !== el('new-password-repeat').value) {
+    notify('Las dos contraseñas no coinciden.', 'error');
+    return;
+  }
+
+  const button = el('reset-submit');
+  button.disabled = true;
+  const { data, error } = await supabase.auth.updateUser({ password });
+  button.disabled = false;
+
+  if (error) {
+    const reason =
+      error.code === 'same_password' ? 'Tiene que ser distinta de la anterior.'
+      : error.code === 'weak_password' ? 'Es demasiado fácil de adivinar; prueba con una más larga.'
+      : 'El enlace puede haber caducado; pide uno nuevo.';
+    notify(`No se pudo cambiar la contraseña. ${reason}`, 'error');
+    return;
+  }
+
+  // Whoever else held a session (a lost phone, a leaked password) is out now.
+  await supabase.auth.signOut({ scope: 'others' });
+  recovering = false;
+  el('reset-form').reset();
+  await showPanel({ user: data.user });
+  notify('Contraseña cambiada. Ya puedes usar la nueva para entrar.');
 }
 
 async function main() {
@@ -307,21 +388,55 @@ async function main() {
     if (error) notify('Email o contraseña incorrectos.', 'error');
   });
 
+  el('show-forgot').addEventListener('click', () => {
+    notify('');
+    el('forgot-email').value = el('email').value.trim();
+    showView('forgot');
+  });
+  el('back-to-login').addEventListener('click', () => {
+    notify('');
+    showLogin();
+  });
+  el('forgot-form').addEventListener('submit', requestReset);
+  el('reset-form').addEventListener('submit', saveNewPassword);
+
   el('logout').addEventListener('click', () => supabase.auth.signOut());
   el('search').addEventListener('input', (e) => {
     filter = e.target.value.trim().toLowerCase();
     render();
   });
 
-  supabase.auth.onAuthStateChange((_event, session) => {
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'PASSWORD_RECOVERY') recovering = true;
+    // updateUser fires USER_UPDATED mid-save; saveNewPassword routes itself.
+    if (event === 'USER_UPDATED') return;
     notify('');
-    if (session) showPanel(session);
-    else showLogin();
+    route(session);
   });
 
   const { data } = await supabase.auth.getSession();
-  if (data.session) showPanel(data.session);
-  else showLogin();
+
+  // The client has read the fragment by now; keep tokens out of the address
+  // bar and the history.
+  if (window.location.hash) {
+    window.history.replaceState(null, '', window.location.pathname + window.location.search);
+  }
+
+  // A reset link that didn't produce a session was rejected (tampered with,
+  // or already used) even if Supabase didn't put an error in the fragment.
+  if (linkError || (recovering && !data.session)) {
+    recovering = false;
+    showView('forgot');
+    notify(
+      linkError === 'otp_expired'
+        ? 'El enlace ha caducado o ya se usó. Pide uno nuevo.'
+        : 'El enlace no es válido. Pide uno nuevo.',
+      'error'
+    );
+    return;
+  }
+
+  route(data.session);
 }
 
 main();

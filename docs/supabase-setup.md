@@ -132,9 +132,52 @@ To revoke someone, delete their row (`delete from private.admins where user_id
 it. `select a.*, u.email from private.admins a join auth.users u on u.id =
 a.user_id;` lists who has access.
 
-## 5. Check it end to end
+## 5. Password recovery
 
-1. Open `/admin.html` and sign in.
+The login card has a *¿Has olvidado tu contraseña?* link. It emails a reset
+link that opens `/admin/`, where the user picks a new password (at least
+10 characters); every other session of that account is signed out. The form
+answers the same whether or not the address has an account, so it can't be
+used to find out who has access.
+
+Four things in the dashboard make it work:
+
+1. **Authentication → URL Configuration**
+   - *Site URL*: `https://charangaponteunamilnoh.com`
+   - *Redirect URLs*: `https://charangaponteunamilnoh.com/admin/` (and
+     `http://127.0.0.1:8080/admin/` to test locally). A reset link whose
+     target isn't listed here is sent to the Site URL instead, and the panel
+     never sees it.
+2. **Authentication → Emails → SMTP Settings**: enable a custom SMTP server.
+   Supabase's built-in sender only delivers to members of the Supabase
+   organisation and a couple of emails an hour, so **the client would never
+   get the email without this**. With the IONOS mailbox of the domain:
+
+   | Field | Value |
+   |---|---|
+   | Host | `smtp.ionos.es` |
+   | Port | `465` |
+   | Username | the full mailbox address, e.g. `web@charangaponteunamilnoh.com` |
+   | Password | that mailbox's password |
+   | Sender email | the same address |
+   | Sender name | `Charanga Ponte Una Milnoh` |
+
+3. **Authentication → Emails → Templates → Reset Password**, in Spanish (on
+   the free plan Supabase only lets you edit templates once step 2 is done):
+   - Subject: `Cambia tu contraseña del panel de fotos`
+   - Body:
+     ```html
+     <h2>Cambia tu contraseña</h2>
+     <p>Alguien (seguramente tú) ha pedido cambiar la contraseña del panel de fotos de Charanga Ponte Una Milnoh.</p>
+     <p><a href="{{ .ConfirmationURL }}">Elegir una contraseña nueva</a></p>
+     <p>El enlace caduca en una hora y solo sirve una vez. Si no lo has pedido tú, ignora este correo: tu contraseña no cambia.</p>
+     ```
+4. **Authentication → Providers → Email**: *Minimum password length* `10`,
+   so the server enforces what the form asks for.
+
+## 6. Check it end to end
+
+1. Open `/admin/` and sign in.
 2. Replace one photo; the card badge turns into *Foto cambiada*.
 3. Open the page listed on that card and hard-reload. The new photo is served
    from `https://<ref>.supabase.co/storage/v1/object/public/web-assets/slots/...`.
@@ -145,7 +188,7 @@ Visitors may keep seeing the previous photo for up to 5 minutes: the manifest is
 requested with a time-bucketed cache buster (`MANIFEST_TTL_SECONDS` in
 [`assets/js/slots.js`](../assets/js/slots.js)).
 
-## 6. Upload the performance clips
+## 7. Upload the performance clips
 
 The six clips aren't in the repository (see README.md, "Performance clips are
 not in the repository yet") but are still on the machine that did this
@@ -195,7 +238,7 @@ happens.
 The admin panel doesn't load supabase-js from a CDN: a pinned copy of the UMD
 build lives in [`assets/vendor/`](../assets/vendor/), so nothing outside this
 repository ever runs next to a signed-in session, and the CSP in
-[`admin.html`](../admin.html) can stay at `script-src 'self'`. To upgrade:
+[`admin/index.html`](../admin/index.html) can stay at `script-src 'self'`. To upgrade:
 
 ```bash
 V=2.x.y   # the new version
@@ -205,7 +248,7 @@ curl -s "https://data.jsdelivr.com/v1/packages/npm/@supabase/supabase-js@$V?stru
 openssl dgst -sha256 -binary "assets/vendor/supabase-js-$V.umd.js" | openssl base64
 ```
 
-Then point the `<script>` in `admin.html` at the new file, delete the old one,
+Then point the `<script>` in `admin/index.html` at the new file, delete the old one,
 and sign in to the panel once to check it still works.
 
 ## Free tier limits
