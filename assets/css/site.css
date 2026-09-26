@@ -195,3 +195,124 @@
 .video-placeholder span {
   position: relative;
 }
+
+/* ---- Castellano / granaíno switch (replaces the ON/OFF image) ----------- */
+/* Floats bottom-left on every page; the WhatsApp widget owns bottom-right. */
+.lang-switch-holder {
+  position: fixed;
+  left: 16px;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 100;
+}
+
+.lang-switch {
+  --switch-purple: #6c419a;
+  --switch-yellow: #dacc1f;
+  --switch-green: #4b7936;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 6px 16px;
+  border: 1px solid rgba(218, 204, 31, 0.45);
+  border-radius: 999px;
+  background: rgba(34, 18, 52, 0.62);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Lato', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+/* Beats the site-wide a:hover (red, underlined). */
+.lang-switch:hover {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  border-color: var(--switch-yellow);
+  background: rgba(34, 18, 52, 0.78);
+}
+
+.lang-switch:focus-visible {
+  outline: 3px solid var(--switch-yellow);
+  outline-offset: 3px;
+}
+
+.lang-switch__option {
+  transition: color 0.2s ease;
+}
+
+.lang-switch__track {
+  position: relative;
+  flex: none;
+  width: 48px;
+  height: 26px;
+  border-radius: 999px;
+  background: var(--switch-purple);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35), 0 0 0 2px rgba(255, 255, 255, 0.18);
+  transition: background-color 0.22s ease;
+}
+
+.lang-switch__thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--switch-yellow);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  transition: transform 0.22s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+
+.lang-switch:hover .lang-switch__thumb {
+  box-shadow: 0 0 0 4px rgba(218, 204, 31, 0.25), 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* State: the variant on screen, or the one being switched to (.is-switching). */
+.lang-switch[data-variant="es"]:not(.is-switching) .lang-switch__option--es,
+.lang-switch[data-variant="granaino"].is-switching .lang-switch__option--es,
+.lang-switch[data-variant="granaino"]:not(.is-switching) .lang-switch__option--granaino,
+.lang-switch[data-variant="es"].is-switching .lang-switch__option--granaino {
+  color: var(--switch-yellow);
+}
+
+.lang-switch[data-variant="granaino"]:not(.is-switching) .lang-switch__track,
+.lang-switch[data-variant="es"].is-switching .lang-switch__track {
+  background: var(--switch-green);
+}
+
+.lang-switch[data-variant="granaino"]:not(.is-switching) .lang-switch__thumb,
+.lang-switch[data-variant="es"].is-switching .lang-switch__thumb {
+  transform: translateX(22px);
+}
+
+@media screen and (max-width: 480px) {
+  .lang-switch-holder {
+    left: 12px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+  }
+
+  .lang-switch {
+    gap: 7px;
+    padding: 4px 10px;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lang-switch,
+  .lang-switch__option,
+  .lang-switch__track,
+  .lang-switch__thumb {
+    transition: none;
+  }
+}

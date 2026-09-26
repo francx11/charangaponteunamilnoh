@@ -1,22 +1,24 @@
 /**
- * Builds the editable-image manifest and tags the markup with `data-slot`.
+ * Builds the editable-image manifest and tags the page templates with
+ * `data-slot`. Run build-i18n.mjs afterwards to carry the tags over to the
+ * generated es/ and granaino/ trees.
  *
  * A slot is keyed by the image file name rather than by the Sitejet asset id,
- * because the Spanish and "granaíno" trees reference the same photo under two
- * different asset ids. Keying by file name means one upload in the admin panel
- * updates both locales at once.
+ * so a photo exported under several asset ids is still a single slot. Both
+ * text variants render the same template, so one upload in the admin panel
+ * updates both at once.
  *
  * Usage: node scripts/build-slots.mjs [--check]
  */
 
-import { readFileSync, writeFileSync, globSync } from 'node:fs';
-import { sep } from 'node:path';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { listTemplates } from './lib/site.mjs';
 
 const CHECK_ONLY = process.argv.includes('--check');
-const PAGES = globSync(['es/**/index.html', 'gd/**/index.html']);
+const TEMPLATES = listTemplates();
 
 /** Brand assets and UI sprites are not client-editable content. */
-const EXCLUDED = /(LogoPonteUnaMilnoh|^logo\.png$|ONGRv2|OFFGRv2)/i;
+const EXCLUDED = /(LogoPonteUnaMilnoh|^logo\.png$)/i;
 
 const SECTIONS = {
   'index': 'Inicio',
@@ -48,24 +50,18 @@ const slugify = (name) => name
   .replace(/^-|-$/g, '')
   .toLowerCase();
 
-const toPosix = (page) => page.split(sep).join('/');
-const routeOf = (page) => '/' + toPosix(page).replace(/\/index\.html$/, '');
-const sectionOf = (page) => {
-  const parts = toPosix(page).split('/');
-  const locale = parts[0];
-  const key = parts.length > 2 ? parts[1] : 'index';
-  return { locale, section: SECTIONS[key] || key };
-};
+const routesOf = (template) => template.variants.map((v) => `/${v}${template.route}`);
+const sectionOf = (template) => SECTIONS[template.slug || 'index'] || template.slug;
 
 /** path -> smallest known variant, used for the admin preview. */
 const slots = new Map();
 
-function addSlot(page, path, kind) {
+function addSlot(template, path, kind) {
   const name = fileName(path);
   if (EXCLUDED.test(name)) return;
 
   const id = slugify(name);
-  const { locale, section } = sectionOf(page);
+  const section = sectionOf(template);
 
   if (!slots.has(id)) {
     slots.set(id, {
@@ -75,29 +71,21 @@ function addSlot(page, path, kind) {
       section,
       label: `${section} · ${KIND_LABEL[kind]}`,
       fallback: path,
-      pages: new Set(),
-      locales: new Set()
+      pages: new Set()
     });
   }
   const slot = slots.get(id);
-  slot.pages.add(routeOf(page));
-  slot.locales.add(locale);
+  for (const route of routesOf(template)) slot.pages.add(route);
   if (kind === 'background' && slot.kind === 'image') slot.kind = 'background';
-  // Prefer the Spanish tree for the label and the fallback path.
-  if (locale === 'es' && !slot.esSeen) {
-    slot.esSeen = true;
-    slot.section = section;
-    slot.label = `${section} · ${KIND_LABEL[slot.kind]}`;
-    slot.fallback = path;
-  }
 }
 
-for (const page of PAGES) {
-  const html = readFileSync(page, 'utf8');
-  for (const m of html.matchAll(/data-background="url\(&quot;(\/images\/[^&]+)&quot;\)"/g)) addSlot(page, m[1], 'background');
-  for (const m of html.matchAll(/poster="(\/images\/[^"]+)"/g)) addSlot(page, m[1], 'poster');
-  for (const m of html.matchAll(/data-src="(\/images\/[^"]+)"/g)) addSlot(page, m[1], 'image');
-  for (const m of html.matchAll(/<img src="(\/images\/[^"]+)"/g)) addSlot(page, m[1], 'image');
+for (const template of TEMPLATES) {
+  const html = template.body;
+  for (const m of html.matchAll(/data-background="url\(&quot;(\/images\/[^&]+)&quot;\)"/g)) addSlot(template, m[1], 'background');
+  for (const m of html.matchAll(/poster="(\/images\/[^"]+)"/g)) addSlot(template, m[1], 'poster');
+  for (const m of html.matchAll(/data-src="(\/images\/[^"]+)"/g)) addSlot(template, m[1], 'image');
+  // `src` may follow a data-slot added by a previous run.
+  for (const m of html.matchAll(/<img [^>]*?(?<![-\w])src="(\/images\/[^"]+)"/g)) addSlot(template, m[1], 'image');
 }
 
 // Number the slots inside each section so the panel reads "Galería · Foto 3".
@@ -149,18 +137,23 @@ function tag(html) {
   return out;
 }
 
-for (const page of PAGES) {
-  const html = readFileSync(page, 'utf8');
+for (const { file } of TEMPLATES) {
+  const html = readFileSync(file, 'utf8');
   const out = tag(html);
   if (out === html) continue;
   touched++;
-  if (!CHECK_ONLY) writeFileSync(page, out, 'utf8');
+  if (!CHECK_ONLY) writeFileSync(file, out, 'utf8');
 }
 
 const json = JSON.stringify({ generatedBy: 'scripts/build-slots.mjs', slots: manifest }, null, 2) + '\n';
+const current = (() => { try { return readFileSync('assets/data/slots.json', 'utf8'); } catch { return ''; } })();
 if (!CHECK_ONLY) writeFileSync('assets/data/slots.json', json, 'utf8');
 
 const bySection = manifest.reduce((acc, s) => ({ ...acc, [s.section]: (acc[s.section] || 0) + 1 }), {});
 console.log(`${manifest.length} slots across ${Object.keys(bySection).length} sections`);
 for (const [section, count] of Object.entries(bySection)) console.log(`  ${section.padEnd(26)} ${count}`);
 console.log(`${touched} page(s) ${CHECK_ONLY ? 'would be' : ''} tagged`);
+if (CHECK_ONLY && (touched || current !== json)) {
+  console.log('templates or assets/data/slots.json are out of date');
+  process.exit(1);
+}

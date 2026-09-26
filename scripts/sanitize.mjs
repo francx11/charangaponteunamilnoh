@@ -1,6 +1,7 @@
 /**
- * Strips the Sitejet CMS runtime from the exported pages and wires the vanilla
- * replacement modules in.
+ * Strips the Sitejet CMS runtime from the page templates and wires the vanilla
+ * replacement modules in. It works on src/pages, not on the generated es/ and
+ * granaino/ trees: run build-i18n.mjs afterwards to carry the result over.
  *
  * The script is idempotent: running it twice leaves the pages unchanged. It
  * fails loudly if any SEO tag (title, description, OpenGraph, canonical,
@@ -11,11 +12,11 @@
  */
 
 import { readFileSync, writeFileSync } from 'node:fs';
-import { globSync } from 'node:fs';
+import { listTemplates } from './lib/site.mjs';
 
 const CHECK_ONLY = process.argv.includes('--check');
 
-const PAGES = globSync(['es/**/index.html', 'gd/**/index.html', 'es/index.html', 'gd/index.html']);
+const PAGES = listTemplates().map((t) => t.file);
 
 const STYLESHEET_TAG = '<link rel="stylesheet" type="text/css" href="/assets/css/site.css"/>';
 const SCRIPT_TAG = '<script type="module" src="/assets/js/main.js"></script>';
@@ -153,7 +154,7 @@ function eagerLoadBanner(html) {
 
 /** The route directory a page lives in, used to name videos that have no data-slot. */
 function routeSlug(file) {
-  const segments = file.split(/[\\/]/).filter((s) => s && s !== 'index.html' && s !== 'es' && s !== 'gd');
+  const segments = file.split(/[\\/]/).filter((s) => s && s !== 'index.html' && s !== 'src' && s !== 'pages');
   return segments[0] || 'video';
 }
 

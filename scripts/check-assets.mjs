@@ -7,7 +7,7 @@
 import { readFileSync, existsSync, globSync } from 'node:fs';
 import { join } from 'node:path';
 
-const PAGES = globSync(['es/**/index.html', 'gd/**/index.html', 'index.html']);
+const PAGES = globSync(['es/**/index.html', 'granaino/**/index.html', 'gd/**/index.html', 'index.html', '404.html']);
 
 const ASSET_PATTERNS = [
   /(?:src|href)="(\/[^"#?]+)"/g,

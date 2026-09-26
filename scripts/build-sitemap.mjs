@@ -23,7 +23,7 @@ const routeOf = (page) => '/' + toPosix(page).replace(/\/index\.html$/, '');
 const lastCommitDate = (page) =>
   execFileSync('git', ['log', '-1', '--format=%cs', '--', page]).toString().trim();
 
-const pages = globSync(['es/**/index.html', 'gd/**/index.html']).sort();
+const pages = globSync(['es/**/index.html', 'granaino/**/index.html']).sort();
 
 const urls = pages
   .map((page) => ({ page, route: routeOf(page) }))
@@ -35,7 +35,7 @@ const urls = pages
   .map(({ page, route }) => ({
     loc: ORIGIN + route,
     lastmod: lastCommitDate(page),
-    priority: /^\/(es|gd)$/.test(route) ? '1.00' : '0.80'
+    priority: /^\/(es|granaino)$/.test(route) ? '1.00' : '0.80'
   }));
 
 const xml = [
