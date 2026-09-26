@@ -90,8 +90,17 @@
   .contact-cta .button {
     flex: 1 1 100%;
     text-align: center;
+    /* Shrink with the screen so the email address stays on one line; only
+       break it on screens too narrow even for that. */
+    font-size: clamp(13px, 6.1vw - 8px, 20px);
+    overflow-wrap: anywhere;
   }
 }
+
+/* The footer box is a flex item, so by default it can't shrink below the
+   email address on its button and pushes past the right edge of the screen,
+   leaving a margin only on the left. */
+.footer-tyr-box-form { min-width: 0; }
 
 /* ---- Slider controls rebuilt without slick's JS ------------------------- */
 .slider-container { position: relative; overflow: hidden; }
