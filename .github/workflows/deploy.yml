@@ -27,6 +27,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Pages are up to date with their templates and translations
+        run: node scripts/build-i18n.mjs --check
       - name: Every local reference resolves
         run: node scripts/check-assets.mjs
       - name: Markup is clean of the Sitejet runtime
@@ -52,6 +54,7 @@ jobs:
           rsync -a
           --exclude='.git*' --exclude='.github/' --exclude='_site/'
           --exclude='docs/' --exclude='scripts/' --exclude='README.md'
+          --exclude='src/' --exclude='i18n/'
           ./ _site/
       - uses: actions/upload-pages-artifact@v3
         with:

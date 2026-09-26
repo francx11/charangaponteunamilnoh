@@ -10,6 +10,7 @@ import initLightbox from './lightbox.js';
 import initMaps from './maps.js';
 import initSlots from './slots.js';
 import initVideos from './videos.js';
+import initLangSwitch from './lang-switch.js';
 
 function boot() {
   // Slot overrides run first so the lazy loader picks up the replaced sources.
@@ -20,6 +21,7 @@ function boot() {
   initLightbox();
   initMaps();
   initVideos();
+  initLangSwitch();
 }
 
 if (document.readyState === 'loading') {

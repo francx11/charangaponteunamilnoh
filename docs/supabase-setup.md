@@ -215,17 +215,19 @@ it whenever it's ready, there's no need to do all six at once.
 
 ## How slots are generated
 
-[`scripts/build-slots.mjs`](../scripts/build-slots.mjs) scans the pages and
-writes [`assets/data/slots.json`](../assets/data/slots.json), tagging each
-editable element with `data-slot="<id>"`. The id is derived from the **image
-file name**, not from the Sitejet asset id, because the `es` and `gd` trees
-reference the same photo under different asset ids — so one upload updates both
-locales.
+[`scripts/build-slots.mjs`](../scripts/build-slots.mjs) scans the page
+templates in `src/pages` and writes
+[`assets/data/slots.json`](../assets/data/slots.json), tagging each editable
+element with `data-slot="<id>"`. The id is derived from the **image file
+name**, not from the Sitejet asset id, because the export references some
+photos under several asset ids. The `es` and `granaino` pages render the same
+template, so one upload updates both.
 
 Re-run it after adding images to the markup:
 
 ```bash
-node scripts/build-slots.mjs        # tags pages and rewrites slots.json
+node scripts/build-slots.mjs        # tags the templates and rewrites slots.json
+node scripts/build-i18n.mjs         # carries the tags over to es/ and granaino/
 node scripts/build-slots.mjs --check  # reports what would change
 ```
 
